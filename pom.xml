@@ -25,7 +25,7 @@
     <packaging>jar</packaging>
 
     <name>Spring Data JPA Postgresql Lob handling sample</name>
-    <description>This sample shows you how to handle Postgresql lobs with Spring Data JPA (and Spring Boot)</description>
+    <description>This sample shows you how to handle PostgreSQL lobs with Spring Data JPA</description>
     <url>https://github.com/ingogriebsch/sample-spring-data-jpa-postgresql-lob-handling</url>
     <inceptionYear>2019</inceptionYear>
     <organization />

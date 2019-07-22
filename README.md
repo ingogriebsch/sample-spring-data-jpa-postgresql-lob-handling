@@ -5,7 +5,7 @@
 [![DepShield Status](https://depshield.sonatype.org/badges/ingogriebsch/sample-spring-data-jpa-postgresql-lob-handling/depshield.svg)](https://depshield.github.io)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-This sample shows you how to handle Postgresql lobs with Spring Data JPA (and Spring Boot).
+This sample shows you how to handle PostgreSQL lobs with Spring Data JPA.
 
 ## Used frameworks
 Collection of the mainly used frameworks in this project. There are more, but they are not that present inside the main use case therefore they are not listed here.
