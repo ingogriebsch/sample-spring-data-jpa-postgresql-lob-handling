@@ -1,0 +1,11 @@
+package com.github.ingogriebsch.sample.spring.data.jpa.postgresql.lob.handling;
+
+import org.junit.Test;
+
+public class DocumentTest {
+
+    @Test(expected = NullPointerException.class)
+    public void ctor_should_throw_exception_if_input_is_null() {
+        new Document(null, null, null, null);
+    }
+}
