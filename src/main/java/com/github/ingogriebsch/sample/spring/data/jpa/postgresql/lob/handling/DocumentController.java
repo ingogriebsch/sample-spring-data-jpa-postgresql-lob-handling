@@ -9,6 +9,8 @@ import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
+import java.io.InputStream;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,10 @@ public class DocumentController {
         Document template =
             new Document(randomUUID().toString(), source.getOriginalFilename(), source.getContentType(), source.getSize());
 
-        Document document = documentRepository.save(template, source.getInputStream());
+        Document document;
+        try (InputStream content = source.getInputStream()) {
+            document = documentRepository.save(template, content);
+        }
         return status(CREATED).body(document);
     }
 
