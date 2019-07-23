@@ -9,10 +9,23 @@
  */
 package com.github.ingogriebsch.sample.spring.data.jpa.postgresql.lob.handling;
 
+import static org.springframework.transaction.annotation.Propagation.MANDATORY;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface DocumentRepository extends PagingAndSortingRepository<Document, String>, DocumentRepositoryCustom {
+
+    // FIXME Documentation suggests to mark queries which are modifying the database as @Modifying. But using the annotation
+    // breaks the call because an executeUpdate (which is called behind the API expects that no result-set is returned (but one is
+    // returned because it's a select).
+    // @Modifying
+    @Query(value = "SELECT lo_unlink(d.content) FROM document d WHERE id = :id", nativeQuery = true)
+    @Transactional(propagation = MANDATORY)
+    void deleteContent(@Param("id") String id);
 
 }

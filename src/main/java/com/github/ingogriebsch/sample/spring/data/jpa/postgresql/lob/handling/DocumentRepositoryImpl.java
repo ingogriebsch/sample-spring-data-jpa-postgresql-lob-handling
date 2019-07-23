@@ -44,10 +44,11 @@ public class DocumentRepositoryImpl implements DocumentRepositoryCustom {
     @Transactional
     public boolean deleteIfExists(@NonNull String id) {
         Document document = documentRepository.findOne(id);
-        // FIXME This is probably not enough to get the content behind the entry deleted as well!
         if (document != null) {
+            documentRepository.deleteContent(id);
             documentRepository.delete(document);
         }
         return document != null;
     }
+
 }

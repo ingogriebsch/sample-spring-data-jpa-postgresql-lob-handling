@@ -27,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -36,10 +37,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class DocumentRepositoryTest {
 
+    private static final String COUNT_FROM_LARGE_OBJECT_METATDATA = "SELECT COUNT(*) FROM pg_largeobject_metadata WHERE oid = ?";
+    private static final String OID_FROM_DOCUMENT_TABLE = "SELECT content FROM document WHERE id = ?";
     @Autowired
     private DocumentRepository documentRepository;
     @Autowired
     private ResourceLoader resourceLoader;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @Autowired
     private TestEntityManager entityManager;
 
@@ -133,5 +138,35 @@ public class DocumentRepositoryTest {
         String id = randomUUID().toString();
         assertThat(documentRepository.exists(id)).isFalse();
         assertThat(documentRepository.deleteIfExists(id)).isFalse();
+    }
+
+    @Test
+    public void deleteIfExists_should_delete_document_including_content() throws Exception {
+        Resource resource = resourceLoader.getResource(ResourceLoader.CLASSPATH_URL_PREFIX + "/documents/simple-svg-file.svg");
+        assertThat(resource.exists()).isTrue();
+
+        Document template = new Document(randomUUID().toString(), resource.getFilename(),
+            probeContentType(get(resource.getURI())), resource.contentLength());
+
+        Document persisted;
+        try (InputStream input = resource.getInputStream()) {
+            persisted = documentRepository.save(template, input);
+            entityManager.flush();
+        }
+        entityManager.clear();
+
+        String persistedId = persisted.getId();
+        Long contentOid = jdbcTemplate.queryForObject(OID_FROM_DOCUMENT_TABLE, Long.class, persistedId);
+        assertThat(contentOid).isNotNull();
+
+        Integer available = jdbcTemplate.queryForObject(COUNT_FROM_LARGE_OBJECT_METATDATA, Integer.class, contentOid);
+        assertThat(available).isEqualTo(1);
+
+        assertThat(documentRepository.exists(persistedId)).isTrue();
+        assertThat(documentRepository.deleteIfExists(persistedId)).isTrue();
+        assertThat(documentRepository.exists(persistedId)).isFalse();
+
+        available = jdbcTemplate.queryForObject(COUNT_FROM_LARGE_OBJECT_METATDATA, Integer.class, contentOid);
+        assertThat(available).isEqualTo(0);
     }
 }
