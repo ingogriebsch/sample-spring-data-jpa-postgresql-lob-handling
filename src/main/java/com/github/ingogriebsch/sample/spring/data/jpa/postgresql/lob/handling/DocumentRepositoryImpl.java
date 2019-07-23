@@ -31,8 +31,8 @@ public class DocumentRepositoryImpl implements DocumentRepositoryCustom {
             template.setContent(content);
             Document saved = documentRepository.save(template);
 
-            // FIXME is this really a good idea? We need it to be able to call Blob.free() but do we need to do it? Or handles the
-            // framework the resource?
+            // FIXME is this really a good idea? We need to make the call to be able to call Blob.free() but do we need to do it?
+            // Or handles the framework the resource?
             entityManager.flush();
             return saved;
         } finally {
