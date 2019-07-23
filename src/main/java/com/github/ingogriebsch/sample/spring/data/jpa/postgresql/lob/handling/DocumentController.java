@@ -9,6 +9,7 @@ import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class DocumentController {
             new Document(randomUUID().toString(), source.getOriginalFilename(), source.getContentType(), source.getSize());
 
         Document document;
-        try (InputStream content = source.getInputStream()) {
+        try (InputStream content = new BufferedInputStream(source.getInputStream())) {
             document = documentRepository.save(template, content);
         }
         return status(CREATED).body(document);
