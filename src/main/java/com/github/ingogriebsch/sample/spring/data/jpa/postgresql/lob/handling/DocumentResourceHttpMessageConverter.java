@@ -10,7 +10,9 @@ import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.util.StreamUtils.copy;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
@@ -74,7 +76,9 @@ public class DocumentResourceHttpMessageConverter implements HttpMessageConverte
     static void writeContent(Document document, HttpOutputMessage outputMessage) throws IOException {
         Blob content = document.getContent();
         try {
-            copy(content.getBinaryStream(), outputMessage.getBody());
+            try (InputStream inputStream = new BufferedInputStream(content.getBinaryStream())) {
+                copy(inputStream, outputMessage.getBody());
+            }
         } catch (SQLException e) {
             throw new IOException(e);
         } finally {
