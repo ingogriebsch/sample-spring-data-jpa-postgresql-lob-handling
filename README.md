@@ -10,6 +10,7 @@ This sample shows you how to handle PostgreSQL lobs with Spring Data JPA.
 ## Used frameworks
 Collection of the mainly used frameworks in this project. There are more, but they are not that present inside the main use case therefore they are not listed here.
 
+*   [PostgreSQL JDBC](https://jdbc.postgresql.org/documentation/94/index.html)
 *   [Spring Data JPA](https://docs.spring.io/spring-data/jpa/docs/1.11.10.RELEASE/reference/html/)
 *   [Spring Boot](https://docs.spring.io/spring-boot/docs/1.5.10.RELEASE/reference/htmlsingle/)
 *   [Testcontainers](https://www.testcontainers.org/)
