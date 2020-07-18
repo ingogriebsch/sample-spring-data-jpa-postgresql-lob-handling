@@ -1,9 +1,8 @@
 package com.github.ingogriebsch.sample.spring.data.jpa.postgresql.lob.handling;
 
+import lombok.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import lombok.NonNull;
 
 @Configuration
 public class WebMvcConfiguration {

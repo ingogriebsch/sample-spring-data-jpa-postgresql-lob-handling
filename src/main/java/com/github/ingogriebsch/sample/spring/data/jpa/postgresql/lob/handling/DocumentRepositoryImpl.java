@@ -6,11 +6,10 @@ import java.sql.Blob;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import lombok.NonNull;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import lombok.NonNull;
 
 public class DocumentRepositoryImpl implements DocumentRepositoryCustom {
 
